@@ -23,6 +23,10 @@
     <div class="dialog-head" style="flex-wrap:wrap;border-top:1px solid var(--line);border-bottom:0">
       <div style="flex:1 1 180px;overflow-wrap:anywhere"><p class="status" id="editAccount" role="status" style="margin:0"></p><p class="status" role="status" id="editStatus" style="margin:0;min-height:0"></p></div>
       <button class="btn" id="editLogin" disabled>使用 Google 登录</button><button class="btn primary" id="publish" disabled>保存并发布</button>
+      <div id="loginHelp" class="row" style="flex:1 0 100%;margin:0" hidden>
+        <input class="search grow" id="loginAddress" type="url" aria-label="看板网址" readonly>
+        <button class="btn" id="copyLoginAddress" type="button">复制看板网址</button>
+      </div>
     </div>
   </div>
 </dialog>
@@ -89,7 +93,7 @@ function field(host,label,value='',multi=false){const wrap=elem('label','field',
 function populateDatalists(){for(const [id,k] of [['level1List','level1'],['level2List','level2']])$(id).replaceChildren(...[...new Set(catalog.docs.map(d=>d[k]))].map(v=>new Option(v)));}
 function editorSection(s){const group=elem('details','section-edit');group.dataset.section=s.id;group.append(elem('summary',null,s.title||'新章节'));const inputs={};for(const [k,label,val,multi] of [['title','章节标题',s.title],['body','完整讲稿（空一行分段）',s.body,true],['cardTitle','话术卡标题',s.card.title],['theory','话术卡 · 底层原理',s.card.theory,true],['script','话术卡 · 演练话术',s.card.script,true],['cues','提词关键词（每行一个）',s.practice.cues.join('\n'),true],['question','自测问题',s.practice.question],['answer','参考要点',s.practice.answer,true]]){inputs[k]=field(group,label,val,multi);inputs[k].dataset.field=k;}inputs.title.oninput=()=>group.querySelector('summary').textContent=inputs.title.value||'新章节';group.append(btn('从本次草稿移除本章',()=>group.remove()));$('editSections').append(group);return group;}
 const blankSection=()=>({id:'s-'+crypto.randomUUID().slice(0,12),title:'',body:'',card:{title:'',theory:'',script:''},practice:{cues:[],question:'',answer:''}});
-function editOpen(create){editorBase=create?null:structuredClone(doc());editorId=editorBase?.id||'doc-'+crypto.randomUUID();editorRevision=cloudTalks.get(editorId)?.revision||0;populateDatalists();$('editHeading').textContent=create?'新增资料':'编辑当前资料';for(const [id,k] of [['editTitle','title'],['editLevel1','level1'],['editLevel2','level2'],['editDescription','description']])$(id).value=editorBase?.[k]||'';$('editSections').replaceChildren();(editorBase?.sections||[blankSection()]).forEach(editorSection);if(create)$('editSections').firstChild.open=true;status('editStatus','');$('editDialog').showModal();}
+function editOpen(create){editorBase=create?null:structuredClone(doc());editorId=editorBase?.id||'doc-'+crypto.randomUUID();editorRevision=cloudTalks.get(editorId)?.revision||0;populateDatalists();$('editHeading').textContent=create?'新增资料':'编辑当前资料';for(const [id,k] of [['editTitle','title'],['editLevel1','level1'],['editLevel2','level2'],['editDescription','description']])$(id).value=editorBase?.[k]||'';$('editSections').replaceChildren();(editorBase?.sections||[blankSection()]).forEach(editorSection);if(create)$('editSections').firstChild.open=true;status('editStatus','');$('loginHelp').hidden=true;$('editDialog').showModal();}
 function draft(){const sections=[...$('editSections').querySelectorAll('[data-section]')].map(group=>{const get=k=>clean(group.querySelector(`[data-field="${k}"]`).value);const title=get('title');return {id:group.dataset.section,title,body:get('body'),card:{title:get('cardTitle')||title,theory:get('theory'),script:get('script')},practice:{cues:get('cues').split('\n').map(clean).filter(Boolean),question:get('question'),answer:get('answer')}};});return {id:editorId,title:clean($('editTitle').value),level1:clean($('editLevel1').value),level2:clean($('editLevel2').value),description:clean($('editDescription').value),sections,sources:editorBase?.sources||[],...(editorBase?.verbatim?{verbatim:true}:{})};}
 function accountControls(){
   $('editLogin').textContent=account?'退出 Google 登录':'使用 Google 登录';
@@ -111,12 +115,40 @@ function cloudError(error){
     default: return error.code?'云端操作暂未完成，请稍后重试。':error.message;
   }
 }
+function loginError(error){
+  const code=/^auth\/[a-z-]+$/.test(error?.code)?error.code:'';
+  if(code==='auth/internal-error'){
+    const script=error.customData?.target;
+    if(script?.tagName==='SCRIPT'&&typeof script.src==='string'&&script.src.startsWith('https://apis.google.com/')){
+      return '浏览器未能加载 Google 登录组件（apis.google.com）。请确认当前网络能访问 Google，再重试。';
+    }
+  }
+  switch(code){
+    case 'auth/web-storage-unsupported': case 'auth/operation-not-supported-in-this-environment':
+      return '当前浏览器不支持这个 Google 登录窗口。请把看板网址复制到 Chrome、Edge 或 Safari 后再登录。';
+    case 'auth/popup-blocked': case 'auth/popup-closed-by-user': case 'auth/unauthorized-domain':
+      return cloudError(error);
+    case 'auth/network-request-failed':
+      return '浏览器未能连上 Google 登录服务。请确认网络能访问 Google，再重试。';
+    case 'auth/operation-not-allowed':
+      return '这个看板的 Google 登录尚未启用。';
+    default:
+      return code?`Google 登录未完成（${code}）。`:'Google 登录未能启动。';
+  }
+}
 async function googleLogin(){
-  accountBusy=true;accountControls();status('editStatus','');
+  accountBusy=true;accountControls();status('editStatus','');$('loginHelp').hidden=true;
   try{
     if(account)await cloud.authApi.signOut(cloud.auth);
     else await cloud.authApi.signInWithPopup(cloud.auth,new cloud.authApi.GoogleAuthProvider());
-  }catch(error){accountBusy=false;accountControls();status('editStatus',cloudError(error),'error');}
+  }catch(error){
+    accountBusy=false;accountControls();status('editStatus',loginError(error),'error');
+    const url=new URL(location.pathname,location.origin);
+    if(editorBase)url.hash=editorBase.id;
+    $('loginAddress').value=url.href;
+    $('copyLoginAddress').textContent='复制看板网址';
+    $('loginHelp').hidden=false;
+  }
 }
 function applyCatalog(){
   const previous=doc();
@@ -217,6 +249,11 @@ document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>$(b.dataset.c
 $('editDialog').addEventListener('cancel',event=>{if(publishing)event.preventDefault();});
 $('manage').onclick=()=>editOpen(false);$('addDoc').onclick=()=>editOpen(true);$('newSection').onclick=()=>editorSection(blankSection()).open=true;$('publish').onclick=publish;
 $('editLogin').onclick=googleLogin;
+$('copyLoginAddress').onclick=async()=>{
+  const field=$('loginAddress');
+  try{await navigator.clipboard.writeText(field.value);$('copyLoginAddress').textContent='已复制网址';}
+  catch{field.focus();field.select();}
+};
 $('librarySearch').oninput=refreshLibrary;$('level1').onchange=()=>{$('level2').value='';refreshLibrary();};$('level2').onchange=refreshLibrary;document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{stopTimer();view=b.dataset.view;render();});
 function boot(){const requested=location.hash.slice(1);if(catalog.docs.some(d=>d.id===requested))selected=requested;refreshLibrary();render();}
 boot();accountControls();initCloud();
