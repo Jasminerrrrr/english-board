@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>英文生活场景全集 - 交互发音看板</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Phosphor Icons for crisp icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0284c7',
+                            600: '#0369a1',
+                            700: '#075985',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(156, 163, 175, 0.4);
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(156, 163, 175, 0.7);
+        }
+        .touch-highlight-none {
+            -webkit-tap-highlight-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 h-full flex flex-col font-sans transition-colors duration-200">
+
+    <!-- Top Header -->
+    <header class="sticky top-0 z-30 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 shrink-0">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 gap-2">
+                <!-- Title & Badge -->
+                <div class="flex items-center gap-3">
+                    <button id="toggleSidebarBtn" class="lg:hidden p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700">
+                        <i class="ph ph-list text-2xl"></i>
+                    </button>
+                    <div>
+                        <h1 class="text-lg sm:text-xl font-bold bg-gradient-to-r from-sky-600 to-indigo-600 dark:from-sky-400 to-indigo-400 bg-clip-text text-transparent">
+                            英文生活场景看板
+                        </h1>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 hidden sm:block">原汁原味 · 23 个主题点按发音</p>
+                    </div>
+                </div>
+
+                <!-- Global Search & Controls -->
+                <div class="flex items-center gap-2 sm:gap-4">
+                    <div class="relative w-36 sm:w-64">
+                        <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg"></i>
+                        <input type="text" id="searchInput" placeholder="搜索短语/主题..." 
+                            class="w-full pl-9 pr-3 py-1.5 text-sm rounded-full bg-slate-100 dark:bg-slate-700/60 border border-transparent focus:border-sky-500 focus:bg-white dark:focus:bg-slate-800 outline-none transition-all">
+                    </div>
+
+                    <!-- Dark Mode Toggle -->
+                    <button id="themeToggleBtn" class="p-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors" title="切换暗黑模式">
+                        <i class="ph ph-moon text-xl dark:hidden"></i>
+                        <i class="ph ph-sun text-xl hidden dark:block"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="flex-1 flex overflow-hidden max-w-7xl w-full mx-auto">
+
+        <!-- Left Sidebar: Category Navigation -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-72 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 transform -translate-x-full lg:translate-x-0 lg:static lg:z-auto transition-transform duration-300 ease-in-out flex flex-col">
+            <div class="p-4 border-b border-slate-100 dark:border-slate-700/50 flex items-center justify-between">
+                <span class="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">场景目录 (23)</span>
+                <span id="totalPhrasesCount" class="text-xs font-medium bg-sky-100 dark:bg-sky-900/50 text-sky-700 dark:text-sky-300 px-2 py-0.5 rounded-full">0 条句段</span>
+            </div>
+            
+            <nav id="categoryNav" class="flex-1 overflow-y-auto p-2 space-y-1">
+                <!-- Dynamic categories loaded here -->
+            </nav>
+        </aside>
+
+        <!-- Sidebar Overlay for mobile -->
+        <div id="sidebarOverlay" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-30 hidden lg:hidden"></div>
+
+        <!-- Right Content Area -->
+        <main class="flex-1 flex flex-col min-w-0 bg-slate-50 dark:bg-slate-900 overflow-hidden">
+            
+            <!-- Sticky Audio Player Control Bar -->
+            <section class="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 p-3 sm:p-4 shadow-sm shrink-0">
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                    
+                    <!-- Current Category Title & Play Controls -->
+                    <div class="flex items-center gap-2">
+                        <button id="playAllBtn" class="flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white font-medium text-sm transition-all shadow-sm active:scale-95 touch-highlight-none">
+                            <i class="ph ph-play-fill text-base"></i>
+                            <span>顺序朗读全组</span>
+                        </button>
+                        <button id="stopBtn" class="flex items-center gap-1 px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-medium text-sm transition-all">
+                            <i class="ph ph-square-fill text-sm"></i>
+                            <span>停止</span>
+                        </button>
+                    </div>
+
+                    <!-- Audio Controls: Speed & Voice Voice Accent -->
+                    <div class="flex items-center gap-4 text-xs sm:text-sm">
+                        <!-- Speed Control -->
+                        <div class="flex items-center gap-2">
+                            <i class="ph ph-gauge text-slate-400 text-lg"></i>
+                            <span class="text-slate-500 dark:text-slate-400">语速:</span>
+                            <input type="range" id="rateRange" min="0.5" max="1.2" step="0.1" value="0.9" class="w-20 accent-sky-600">
+                            <span id="rateVal" class="font-mono w-8 font-semibold text-sky-600 dark:text-sky-400">0.9x</span>
+                        </div>
+
+                        <!-- Accent Selection -->
+                        <div class="hidden sm:flex items-center gap-1">
+                            <i class="ph ph-globe text-slate-400 text-lg"></i>
+                            <select id="voiceSelect" class="bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs rounded-md px-2 py-1 outline-none">
+                                <option value="en-US">美式发音 (US)</option>
+                                <option value="en-GB">英式发音 (UK)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Main Phrase Grid View -->
+            <div id="contentScrollArea" class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
+                <!-- Header of Current Category -->
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 id="currentCategoryTitle" class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
+                            加载中...
+                        </h2>
+                        <p id="currentCategoryDesc" class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+                            点击任意短语或单词卡片，随时收听标准发音
+                        </p>
+                    </div>
+                    <span id="phraseCountBadge" class="text-xs bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-2.5 py-1 rounded-full font-medium">
+                        0 条
+                    </span>
+                </div>
+
+                <!-- Phrase Cards Container -->
+                <div id="cardsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                    <!-- Phrase Cards loaded dynamically -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Data strictly matching user's exact content & sequence
+        const rawData = [
+            {
+                id: "1",
+                title: "1. 穿鞋子 (Putting on Shoes)",
+                phrases: [
+                    "Let's put your shoes on before we head out.",
+                    "We need to put your socks on first.",
+                    "These shoes have Velcro straps.",
+                    "And do the Velcro first.",
+                    "Slip your left foot in, push your heel down, fasten the Velcro.",
+                    "Let's do the same thing for your right foot.",
+                    "Oh, they're on the wrong feet.",
+                    "Let's try again.",
+                    "All right, you're good to go."
+                ]
+            },
+            {
+                id: "2",
+                title: "2. 身体与手部 (Hand & Fingers)",
+                phrases: [
+                    "This is your palm.",
+                    "This is the back of your hand.",
+                    "You have 10 fingers.",
+                    "Do you know the name of your fingers?",
+                    "Thumb, pointer finger, middle finger, ring finger, pinky.",
+                    "Can you wiggle your fingers?",
+                    "Try to make a fist.",
+                    "Give me a thumbs up."
+                ]
+            },
+            {
+                id: "3",
+                title: "3. 苹果主题 (Apple Theme)",
+                phrases: [
+                    "Do you want an apple?",
+                    "Let's rinse it under running water.",
+                    "The red part is the apple skin.",
+                    "It's clean now.",
+                    "You can eat it with the skin on, or daddy can peel it with a peeler.",
+                    "Watch daddy cut it in half with a knife.",
+                    "The white part is called is called the flesh.",
+                    "this little stick is called a stem.",
+                    "the core is in the middle with seeds inside.",
+                    "let's cut them out, take a bite, it's so crunchy and juicy."
+                ]
+            },
+            {
+                id: "4",
+                title: "4. 琐碎日常与抱怨 (Daily Frustrations)",
+                phrases: [
+                    "This is so annoying.",
+                    "Why are you wearing your hoodie backwards?",
+                    "I was in a hurry and put it on without realizing.",
+                    "These headphones always get tangled like the cords are all twisted together.",
+                    "Yeah, and now I have to untangle them.",
+                    "Just go slowly, it's probably be easier said than done.",
+                    "I'm bored out of my mind.",
+                    "my whole Monday was just one long zoning out session.",
+                    "scrolling my phone, textbook out, local in."
+                ]
+            },
+            {
+                id: "5",
+                title: "5. 味道与口感词汇 (Flavors & Taste Words)",
+                phrases: [
+                    "sweet",
+                    "sour",
+                    "bitter",
+                    "spicy",
+                    "salty",
+                    "umami",
+                    "astringent",
+                    "Numbing",
+                    "fishing",
+                    "fra- fragrant",
+                    "aromatic",
+                    "Smelly",
+                    "stinky",
+                    "breezy",
+                    "oily",
+                    "light",
+                    "mild, mild, mild",
+                    "rich",
+                    "strong",
+                    "savory",
+                    "tangy",
+                    "Tart",
+                    "sweet and sour",
+                    "spicy and sour",
+                    "spicy and numbing",
+                    "salty and flash and fresh",
+                    "Salty and fresh",
+                    "bitter bitter sweet",
+                    "creamy",
+                    "minty",
+                    "cheesy",
+                    "fruity",
+                    "Citrusy 柑橘味的。"
+                ]
+            },
+            {
+                id: "6",
+                title: "6. 秋衣秋裤 (Thermal Underwear)",
+                phrases: [
+                    "It's getting cold.",
+                    "We need to put on your thermal underwear.",
+                    "This is thermal top.",
+                    "These are thermal pants.",
+                    "I tuck the thermal tops into the thermal pants.",
+                    "I tuck the legs of the thermal pants into the socks.",
+                    "Thermal underwear keeps our body warm."
+                ]
+            },
+            {
+                id: "7",
+                title: "7. 洗护用品 (Personal Care & Toiletries)",
+                phrases: [
+                    "I need a new flosser right now.",
+                    "I use a fuzzy pick after dinner.",
+                    "Where are my cotton swabs?",
+                    "I buy facial wipes I buy facial wipes every month.",
+                    "I want to buy an electric toothbrush.",
+                    "Put your toothbrush in the rinse cup.",
+                    "Be careful with this air pick.",
+                    "I put on my towel wrap.",
+                    "wash your hands with soap.",
+                    "I can't find my hair tie, I can't find my hair ties."
+                ]
+            },
+            {
+                id: "8",
+                title: "8. 口味评价 (Taste Comments)",
+                phrases: [
+                    "This coffee tastes a bit watery.",
+                    "I was hoping for something stronger.",
+                    "The juice is overly sweet for my taste.",
+                    "I would prefer something more refreshing.",
+                    "now, this milkshake is rich and creamy with just a hint of vanilla.",
+                    "that's more like it."
+                ]
+            },
+            {
+                id: "9",
+                title: "9. 厨房用具 (Kitchen Utensils)",
+                phrases: [
+                    "tongs",
+                    "whisk",
+                    "peeler",
+                    "Spectra",
+                    "ladle",
+                    "colander"
+                ]
+            },
+            {
+                id: "10",
+                title: "10. 洗碗 (Washing Dishes)",
+                phrases: [
+                    "Let's do the dishes.",
+                    "First, stack up the dishes and put them in the sink.",
+                    "Fill the sink with water, and you need a dish soap.",
+                    "This is a scrubbing pad, spongy.",
+                    "Scrub the dishes using scrubbing pad.",
+                    "Rinse the dishes.",
+                    "Finished.",
+                    "Put the dishes on the rack.",
+                    "Look, the water is dripping off the dishes.",
+                    "Pull the plug from the sink, the water is going down the drain.",
+                    "Dry the dishes with a towel.",
+                    "Put away the dishes."
+                ]
+            },
+            {
+                id: "11",
+                title: "11. 洗菜 (Washing Vegetables)",
+                phrases: [
+                    "Pull off the leaves.",
+                    "Cut off the stem.",
+                    "Rinse the leaves under running water.",
+                    "Add a pinch of salt.",
+                    "Soak for a few minutes.",
+                    "Rinse a few times.",
+                    "Drain the leaves in a colander."
+                ]
+            },
+            {
+                id: "12",
+                title: "12. 燃气灶 (Gas Stove & Hood)",
+                phrases: [
+                    "This is a gas stove and a range hood.",
+                    "The lower one is a gas stove.",
+                    "Turn the knob on the gas stove, and the flame will appear.",
+                    "The one above is a range hood.",
+                    "Turn on the range hood when cooking.",
+                    "It sucks up cooking fumes and smells.",
+                    "They are essential helpers in our kitchen."
+                ]
+            },
+            {
+                id: "13",
+                title: "13. 外卖取餐与导航 (Food Delivery)",
+                phrases: [
+                    "Delivering status",
+                    "delivery address",
+                    "food delivery",
+                    "intercom",
+                    "lobby",
+                    "main entrance",
+                    "notification",
+                    "driver location",
+                    "navigation",
+                    "check the estimated arrival time",
+                    "I will be back in a minute",
+                    "quickly reply",
+                    "directions",
+                    "give clearer directions. Explain the problem.",
+                    "Ask where the driver is waiting.",
+                    "Open the chat.",
+                    "Street entrance.",
+                    "Corridor.",
+                    "Automatic sliding door",
+                    "access code",
+                    "go around the corner",
+                    "go down to the ground floor",
+                    "take the lift downstairs.",
+                    "I will be there shortly.",
+                    "I will be outside in a second.",
+                    "Walk past the reception desk, scan my key fob.",
+                    "Can you see the reception desk?",
+                    "Just walking through the lobby."
+                ]
+            },
+            {
+                id: "14",
+                title: "14. 坐摇摇车 (Kiddie Ride)",
+                phrases: [
+                    "Let's get on the kitty ride.",
+                    "Let's get off the kitty ride.",
+                    "Here is a coin.",
+                    "We need to put it in the coin slot.",
+                    "Now, press the button to start.",
+                    "Hold the steering wheel.",
+                    "Can you start it to rock back and forward?",
+                    "No, the car started to rock back and forward.",
+                    "You can press the button to change the song.",
+                    "Time's up, the car stopped.",
+                    "One more ride, OK?",
+                    "That is,OK, this is the last one.",
+                    "We have to keep our promise."
+                ]
+            },
+            {
+                id: "15",
+                title: "15. 剥鸡蛋 (Peeling Boiled Eggs)",
+                phrases: [
+                    "This is a boiled egg.",
+                    "It's hot.",
+                    "Let's soak it in cold water.",
+                    "Tap it on the table to crack the shell.",
+                    "Roll it around Roll it around Roll it around",
+                    "Let's peel the shell",
+                    "Take your time",
+                    "Peel it bit by bit",
+                    "The shell is stuck. To the egg white.",
+                    "be careful not to break the egg.",
+                    "all the shells are off.",
+                    "pull the egg white apart.",
+                    "There is the egg yolk.",
+                    "Don't choke on it.",
+                    "Take small bites."
+                ]
+            },
+            {
+                id: "16",
+                title: "16. 坐电梯 (Taking the Elevator)",
+                phrases: [
+                    "Let's go call the elevator.",
+                    "Can you press the up button?",
+                    "The elevator is here.",
+                    "Let's get on.",
+                    "Let's wait for the people to come out first.",
+                    "Can you press the button for it?",
+                    "No jumping in on the elevator.",
+                    "Hold the door open button. Until everyone is in, hold the Down Close button to make the door close sooner.",
+                    "Here we are.",
+                    "Let's get off.",
+                    "Watch your step."
+                ]
+            },
+            {
+                id: "17",
+                title: "17. 吃酸奶 (Eating Yogurt)",
+                phrases: [
+                    "This is a cup of yogurt.",
+                    "It just came out from, it just came out of the fridge.",
+                    "Let's wait till it warms up a bit.",
+                    "Take off the lid, tear open the wrapper, and take off the spoon, and fold the spoon.",
+                    "You can scoop up some yogurt with it.",
+                    "Peel off the lid by pulling this tab.",
+                    "this is a lot of yogurt on the lid.",
+                    "do you wanna lick it off?",
+                    "this one is a plain.",
+                    "it tastes a little tangy.",
+                    "you are such a mess all down you eat it all up."
+                ]
+            },
+            {
+                id: "18",
+                title: "18. 安全插座 (Power Outlet Safety)",
+                phrases: [
+                    "This is an outlet.",
+                    "The outlet has little holes in it.",
+                    "Only plugs go in the outlet.",
+                    "Nothing else.",
+                    "Don't stick your fingers in the holes.",
+                    "That's dangerous.",
+                    "You may get a shock.",
+                    "Mommy's going to put covers on all outlets.",
+                    "Claws are not for playing.",
+                    "Don't play claws in your mouth."
+                ]
+            },
+            {
+                id: "19",
+                title: "19. 搭积木与投篮 (Blocks & Basketball)",
+                phrases: [
+                    "These are soft blocks.",
+                    "Squeeze it.",
+                    "They are so squishy.",
+                    "Let's stack let's stack them up.",
+                    "Careful easy Careful easy does it, easy does it.",
+                    "Knock it down.",
+                    "Oops, it fell all over the place.",
+                    "That was fun That was fun.",
+                    "Let's do it again.",
+                    "There is a hoop.",
+                    "Let's play with the ball.",
+                    "Can you shoot the ball into the hoop?",
+                    "Hold the ball with both hands, aim for the hoop and throw.",
+                    "Oh, that let's try.",
+                    "you miss it by a little.",
+                    "you can do it.",
+                    "keep trying.",
+                    "miss it.",
+                    "no no big deal.",
+                    "go pick up the ball.",
+                    "nice shot.",
+                    "you can you you did it.",
+                    "that's two baskets in a row.",
+                    "don't throw the ball at people."
+                ]
+            },
+            {
+                id: "20",
+                title: "20. 家长会 (Parent-Teacher Meeting)",
+                phrases: [
+                    "That's for meeting with Thanks for meeting with me.",
+                    "Overall, Ethan is doing OK.",
+                    "That's good to hear.",
+                    "How is he doing academically?",
+                    "He is meeting he's meeting grade level expectations.",
+                    "Which area needs need work? Which areas need work?",
+                    "Reading comprehension is mean.",
+                    "he reads words but struggles explaining the story.",
+                    "he sometimes loses focus during independent work.",
+                    "does that happen often?",
+                    "he need reminders to stay on task, especially with reading or writing.",
+                    "We see that at home too.",
+                    "do you think he's falling behind?",
+                    "no, but he needs extra practice.",
+                    "is he is he participating in class?",
+                    "he participates when he feels confident, but sometimes he hesitated hesitates in front of the class.",
+                    "what can we do at home?",
+                    "try reading together every day, ask him what happen in the story, or why a character did that.",
+                    "should we work on writing?",
+                    "yes, even a few sentences will help.",
+                    "How can we keep track of his progress?",
+                    "I will continue to monitor him in class."
+                ]
+            },
+            {
+                id: "21",
+                title: "21. 居家安全 (Home Safety Tips)",
+                phrases: [
+                    "Close the drawer slowly.",
+                    "Keep your fingers out of the drawer.",
+                    "Don't bump your head on the table.",
+                    "Watch out for pointy corners.",
+                    "Don't trip over your toys.",
+                    "Keep fingers out of the door gap.",
+                    "When the door is closing, be careful not to get your fingers caught."
+                ]
+            },
+            {
+                id: "22",
+                title: "22. 下雨天 (Rainy Day)",
+                phrases: [
+                    "Look outside.",
+                    "It's raining really hard.",
+                    "It's heavy.",
+                    "Heavy rain, the trees are dancing in the wind, raindrops are falling from the sky, the rain goes pitter patter on the window, did you see that flash in the sky?",
+                    "that's lightning, do you hear that?",
+                    "it's thunder, the flash, the flash travels faster than the boom, so we saw the flash first, and then we hear, we heard the boom.",
+                    "Here comes the boom again.",
+                    "Cover the ears if it's too loud."
+                ]
+            },
+            {
+                id: "23",
+                title: "23. 水杯倒水 (Glass of Water)",
+                phrases: [
+                    "Here is a glass.",
+                    "The glass is empty.",
+                    "Let's pour some water in.",
+                    "It's just a little bit.",
+                    "It's half full.",
+                    "It's getting full.",
+                    "It's all full.",
+                    "Oh, oh, it's spilling over.",
+                    "Take a little sip.",
+                    "Let's wipe it up."
+                ]
+            }
+        ];
+
+        // State Management
+        let currentCategoryIndex = 0;
+        let isPlayingSequence = false;
+        let sequenceIndex = 0;
+        let activeUtterance = null;
+        let currentlyPlayingCardIndex = null;
+        let voices = [];
+
+        // DOM Elements
+        const categoryNav = document.getElementById('categoryNav');
+        const cardsGrid = document.getElementById('cardsGrid');
+        const currentCategoryTitle = document.getElementById('currentCategoryTitle');
+        const phraseCountBadge = document.getElementById('phraseCountBadge');
+        const totalPhrasesCount = document.getElementById('totalPhrasesCount');
+        const searchInput = document.getElementById('searchInput');
+        const rateRange = document.getElementById('rateRange');
+        const rateVal = document.getElementById('rateVal');
+        const voiceSelect = document.getElementById('voiceSelect');
+        const playAllBtn = document.getElementById('playAllBtn');
+        const stopBtn = document.getElementById('stopBtn');
+
+        // Speech Synthesis Init
+        const synth = window.speechSynthesis;
+
+        function loadVoices() {
+            if (!synth) return;
+            voices = synth.getVoices();
+        }
+
+        if (synth) {
+            loadVoices();
+            if (speechSynthesis.onvoiceschanged !== undefined) {
+                speechSynthesis.onvoiceschanged = loadVoices;
+            }
+        }
+
+        // Calculate total count
+        const totalPhrases = rawData.reduce((acc, curr) => acc + curr.phrases.length, 0);
+        totalPhrasesCount.textContent = `${totalPhrases} 条句段`;
+
+        // Render Sidebar Navigation
+        function renderSidebar(filterText = '') {
+            categoryNav.innerHTML = '';
+            rawData.forEach((cat, idx) => {
+                const isSearching = filterText.trim().length > 0;
+                let matchingPhrasesCount = 0;
+
+                if (isSearching) {
+                    matchingPhrasesCount = cat.phrases.filter(p => 
+                        p.toLowerCase().includes(filterText.toLowerCase())
+                    ).length;
+                    if (matchingPhrasesCount === 0 && !cat.title.toLowerCase().includes(filterText.toLowerCase())) {
+                        return; // hide categories without matches
+                    }
+                }
+
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium transition-all flex items-center justify-between group ${
+                    idx === currentCategoryIndex && !isSearching
+                        ? 'bg-sky-50 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 font-semibold border-l-4 border-sky-600'
+                        : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/50'
+                }`;
+                
+                btn.onclick = () => {
+                    currentCategoryIndex = idx;
+                    if (window.innerWidth < 1024) toggleSidebar(false);
+                    stopAudio();
+                    renderCards();
+                    renderSidebar();
+                };
+
+                btn.innerHTML = `
+                    <span class="truncate pr-2">${cat.title}</span>
+                    <span class="text-xs px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 group-hover:bg-slate-200 dark:group-hover:bg-slate-600 transition-colors">
+                        ${isSearching ? matchingPhrasesCount : cat.phrases.length}
+                    </span>
+                `;
+                categoryNav.appendChild(btn);
+            });
+        }
+
+        // Render Phrase Cards
+        function renderCards() {
+            cardsGrid.innerHTML = '';
+            const searchVal = searchInput.value.trim().toLowerCase();
+
+            if (searchVal) {
+                // Global search mode across all categories
+                currentCategoryTitle.textContent = `搜索结果: "${searchVal}"`;
+                let foundTotal = 0;
+
+                rawData.forEach((cat) => {
+                    cat.phrases.forEach((phrase, pIdx) => {
+                        if (phrase.toLowerCase().includes(searchVal) || cat.title.toLowerCase().includes(searchVal)) {
+                            foundTotal++;
+                            cardsGrid.appendChild(createCardElement(phrase, cat.title, foundTotal - 1));
+                        }
+                    });
+                });
+
+                phraseCountBadge.textContent = `${foundTotal} 条匹配`;
+                if (foundTotal === 0) {
+                    cardsGrid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400">未查找到匹配的英文短语</div>`;
+                }
+                return;
+            }
+
+            // Standard Category View
+            const cat = rawData[currentCategoryIndex];
+            currentCategoryTitle.textContent = cat.title;
+            phraseCountBadge.textContent = `${cat.phrases.length} 条句段`;
+
+            cat.phrases.forEach((phrase, index) => {
+                cardsGrid.appendChild(createCardElement(phrase, null, index));
+            });
+        }
+
+        // Create individual card element
+        function createCardElement(text, categoryTag, index) {
+            const card = document.createElement('div');
+            const isPlaying = currentlyPlayingCardIndex === index;
+
+            card.className = `group relative p-4 rounded-xl border transition-all duration-200 cursor-pointer flex flex-col justify-between touch-highlight-none ${
+                isPlaying 
+                    ? 'bg-sky-50 dark:bg-sky-900/30 border-sky-400 dark:border-sky-500 ring-2 ring-sky-400/20 shadow-md' 
+                    : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-sky-300 dark:hover:border-slate-600 hover:shadow-sm'
+            }`;
+
+            card.onclick = () => {
+                speakSingle(text, index);
+            };
+
+            // Clean English text for speech API (remove Chinese notes like 柑橘味的)
+            const cleanText = text.replace(/[\u4e00-\u9fa5]/g, '').trim();
+
+            card.innerHTML = `
+                <div>
+                    ${categoryTag ? `<span class="inline-block mb-1.5 text-xs text-sky-600 dark:text-sky-400 font-semibold">${categoryTag}</span>` : ''}
+                    <p class="text-base sm:text-lg font-medium text-slate-800 dark:text-slate-100 leading-relaxed pr-8">
+                        ${highlightCleanText(text)}
+                    </p>
+                </div>
+                <div class="mt-3 flex items-center justify-between text-xs text-slate-400 dark:text-slate-500 pt-2 border-t border-slate-100 dark:border-slate-700/50">
+                    <span class="flex items-center gap-1">
+                        <i class="ph ph-hash"></i> ${index + 1}
+                    </span>
+                    <div class="flex items-center gap-2">
+                        <button onclick="event.stopPropagation(); copyText('${escapeQuotes(text)}')" class="p-1 hover:text-sky-600 dark:hover:text-sky-400 transition-colors" title="复制文本">
+                            <i class="ph ph-copy text-base"></i>
+                        </button>
+                        <button class="p-1.5 rounded-full ${isPlaying ? 'text-sky-600 dark:text-sky-400 bg-sky-100 dark:bg-sky-900/50 animate-pulse' : 'text-slate-400 group-hover:text-sky-600 dark:group-hover:text-sky-400'}" title="发音">
+                            <i class="ph ${isPlaying ? 'ph-speaker-high-fill' : 'ph-speaker-high'} text-lg"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            return card;
+        }
+
+        function highlightCleanText(text) {
+            // Keep original punctuation and formatting intact
+            return text;
+        }
+
+        function escapeQuotes(str) {
+            return str.replace(/'/g, "\\'").replace(/"/g, '\\"');
+        }
+
+        // Copy Text
+        function copyText(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+
+            showToast('已复制到剪贴板');
+        }
+
+        function showToast(msg) {
+            const toast = document.createElement('div');
+            toast.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs px-4 py-2 rounded-full shadow-lg z-50 animate-fade-in';
+            toast.textContent = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 1500);
+        }
+
+        // Speech Functions
+        function speakSingle(rawText, cardIndex) {
+            stopAudio();
+            currentlyPlayingCardIndex = cardIndex;
+            renderCards();
+
+            // Strip Chinese characters for SpeechSynthesis
+            const textToSpeak = rawText.replace(/[\u4e00-\u9fa5]+/g, '').trim();
+            if (!textToSpeak) return;
+
+            const utterance = new SpeechSynthesisUtterance(textToSpeak);
+            utterance.rate = parseFloat(rateRange.value);
+            utterance.lang = voiceSelect.value;
+
+            // Try selecting specific accent voice
+            if (voices.length > 0) {
+                const matchedVoice = voices.find(v => v.lang.includes(voiceSelect.value.replace('-', '_')) || v.lang.includes(voiceSelect.value));
+                if (matchedVoice) utterance.voice = matchedVoice;
+            }
+
+            utterance.onend = () => {
+                currentlyPlayingCardIndex = null;
+                renderCards();
+            };
+
+            utterance.onerror = () => {
+                currentlyPlayingCardIndex = null;
+                renderCards();
+            };
+
+            activeUtterance = utterance;
+            synth.speak(utterance);
+        }
+
+        function playSequence() {
+            stopAudio();
+            isPlayingSequence = true;
+            sequenceIndex = 0;
+            playNextInSequence();
+        }
+
+        function playNextInSequence() {
+            if (!isPlayingSequence) return;
+
+            const currentPhrases = rawData[currentCategoryIndex].phrases;
+            if (sequenceIndex >= currentPhrases.length) {
+                isPlayingSequence = false;
+                currentlyPlayingCardIndex = null;
+                renderCards();
+                return;
+            }
+
+            const phrase = currentPhrases[sequenceIndex];
+            currentlyPlayingCardIndex = sequenceIndex;
+            renderCards();
+
+            // Scroll card into view
+            const cardElem = cardsGrid.children[sequenceIndex];
+            if (cardElem) {
+                cardElem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+
+            const cleanText = phrase.replace(/[\u4e00-\u9fa5]+/g, '').trim();
+            const utterance = new SpeechSynthesisUtterance(cleanText);
+            utterance.rate = parseFloat(rateRange.value);
+            utterance.lang = voiceSelect.value;
+
+            utterance.onend = () => {
+                if (isPlayingSequence) {
+                    sequenceIndex++;
+                    setTimeout(playNextInSequence, 400); // Small pause between phrases
+                }
+            };
+
+            utterance.onerror = () => {
+                isPlayingSequence = false;
+                currentlyPlayingCardIndex = null;
+                renderCards();
+            };
+
+            synth.speak(utterance);
+        }
+
+        function stopAudio() {
+            isPlayingSequence = false;
+            currentlyPlayingCardIndex = null;
+            if (synth) synth.cancel();
+        }
+
+        // Event Listeners
+        rateRange.addEventListener('input', (e) => {
+            rateVal.textContent = `${e.target.value}x`;
+        });
+
+        playAllBtn.addEventListener('click', playSequence);
+        stopBtn.addEventListener('click', stopAudio);
+
+        searchInput.addEventListener('input', (e) => {
+            renderSidebar(e.target.value);
+            renderCards();
+        });
+
+        // Theme Toggle
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        themeToggleBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+        });
+
+        // Mobile Sidebar Drawer Control
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const toggleSidebarBtn = document.getElementById('toggleSidebarBtn');
+
+        function toggleSidebar(open) {
+            if (open) {
+                sidebar.classList.remove('-translate-x-full');
+                sidebarOverlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                sidebarOverlay.classList.add('hidden');
+            }
+        }
+
+        toggleSidebarBtn.addEventListener('click', () => toggleSidebar(true));
+        sidebarOverlay.addEventListener('click', () => toggleSidebar(false));
+
+        // Initial Initialization
+        renderSidebar();
+        renderCards();
+    </script>
+</body>
+</html>
