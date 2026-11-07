@@ -147,7 +147,7 @@ function applyCatalog(){
 }
 async function loadPublishedTalks(){
   const {db,dbApi}=cloud;
-  const snapshot=await dbApi.getDocsFromServer(dbApi.collection(db,'talks'));
+  const snapshot=await dbApi.getDocs(dbApi.collection(db,'talks'));
   for(const item of snapshot.docs){
     const {content,revision}=item.data();
     const data=JSON.parse(content);
@@ -160,15 +160,15 @@ async function loadPublishedTalks(){
 async function initCloud(){
   if(!firebaseConfig){accountBusy=false;accountControls();return;}
   try{
-    const sdk='https://www.gstatic.com/firebasejs/12.19.0/';
-    const [appApi,authApi,dbApi]=await Promise.all([import(sdk+'firebase-app.js'),import(sdk+'firebase-auth.js'),import(sdk+'firebase-firestore.js')]);
-    const app=appApi.initializeApp(firebaseConfig);
+    const sdk=await import('./firebase-sdk.js');
+    const app=sdk.initializeApp(firebaseConfig);
+    const authApi=sdk,dbApi=sdk;
     cloud={authApi,dbApi,auth:authApi.getAuth(app),db:dbApi.getFirestore(app)};
     authApi.onAuthStateChanged(cloud.auth,async user=>{
       account=user;canPublish=false;accountBusy=!!user;accountControls();
       if(!user)return;
       let allowed=false;
-      try{await dbApi.getDocFromServer(dbApi.doc(cloud.db,'permissions','publish'));allowed=true;}catch(error){
+      try{await dbApi.getDoc(dbApi.doc(cloud.db,'permissions','publish'));allowed=true;}catch(error){
         if(error.code!=='permission-denied'&&account===user){
           for(const id of ['editStatus','syncStatus'])status(id,cloudError(error),'error');
         }
