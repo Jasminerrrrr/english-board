@@ -3,28 +3,15 @@
 <style>
 :root{--paper:#f7f6ef;--card:#fffefa;--ink:#19342c;--soft:#587169;--line:#dbe4da;--green:#215746;--mint:#e8f2e7;--gold:#ffe597;--accent:#ad792a}*{box-sizing:border-box}html{scroll-padding-top:90px}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.65 'PingFang SC','Microsoft YaHei',sans-serif}button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[role=button]:focus-visible{outline:3px solid #b07c30;outline-offset:3px}a{color:var(--green);text-underline-offset:3px}h1,h2,h3,p{margin:0 0 .65em}h1,h2{font-family:'Songti SC',SimSun,serif}header.top{background:var(--green);color:#fff;padding:26px max(18px,calc((100% - 1320px)/2));display:flex;align-items:center;justify-content:space-between;gap:16px}header.top h1{margin:3px 0;font-size:clamp(25px,3vw,36px);letter-spacing:.05em}header.top small,.kicker{font-size:11px;letter-spacing:.15em;font-weight:700}header.top p{color:#d4e6d9;margin:0;font-size:13px}.tools{display:flex;gap:8px;flex-wrap:wrap}.btn{border:1px solid var(--line);border-radius:9px;background:var(--card);color:var(--ink);padding:9px 12px;font-size:13px;min-height:40px;white-space:nowrap}.btn:hover{background:var(--mint)}.primary{background:var(--green);border-color:var(--green);color:white}.primary:hover{background:#326e5b}.btn:disabled{opacity:.55;cursor:wait}.layout{max-width:1356px;margin:24px auto;display:grid;grid-template-columns:275px minmax(0,1fr);gap:24px;padding:0 18px}aside{min-width:0;align-self:start;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;position:sticky;top:18px;max-height:calc(100dvh - 36px);overflow:auto}aside h2{font-family:inherit;font-size:13px;letter-spacing:.08em}.field{display:grid;gap:5px;margin-bottom:12px;font-size:13px}.field input,.field textarea,.field select,.search{width:100%;border:1px solid #c7d4c9;border-radius:8px;background:#fff;padding:9px;min-width:0}.field textarea{resize:vertical;line-height:1.65}.doc-list{display:grid;gap:8px}.doc-button{text-align:left;display:block;width:100%;padding:11px;border:1px solid var(--line);background:#fff;border-radius:9px;font-size:13px}.doc-button[aria-current=true]{border-color:#76a88d;background:var(--mint)}.doc-button span{display:block;color:var(--soft);font-size:11px}.path{font-size:12px;color:var(--soft);letter-spacing:.02em}.doc-head{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}.doc-head h2{font-size:clamp(24px,3vw,36px);line-height:1.3;margin:7px 0}.doc-head p,.muted{color:var(--soft);font-size:13px}.navtabs{display:flex;gap:7px;flex-wrap:wrap;padding:12px 0;background:var(--paper);position:sticky;top:0;z-index:2}.navtabs .active{background:var(--green);border-color:var(--green);color:white}.notice{font-size:13px;padding:10px 13px;border-radius:8px;background:var(--mint);margin:0 0 13px}.reading{padding:14px 0}.reading section{scroll-margin-top:72px;padding:17px 0 8px;border-top:1px solid var(--line)}.reading h3{font-size:18px;line-height:1.4;margin-bottom:.9em}.reading p{line-height:2.02;font-size:16px;margin-bottom:1em}.sentence{cursor:pointer;border-radius:3px;box-decoration-break:clone;-webkit-box-decoration-break:clone;padding:2px 0}.sentence:hover{background:#e6efe4}.sentence.saved{background:var(--gold);box-shadow:inset 0 -1px #c5a55c}.sentence.saved:hover{background:#ffdc72}.hit{background:#cce6d8;color:#12402f}.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:12px}.card h3{font-size:17px}.card .kicker{color:var(--green);margin-top:12px}.card p{white-space:pre-wrap}.cue{display:grid;gap:16px;padding:clamp(14px,3vw,30px);background:var(--green);color:#fff;border-radius:14px;min-height:270px}.cue h2{font-size:clamp(24px,4vw,38px);line-height:1.35;margin:0}.cue .kicker,.cue p{color:#d4e5d5}.cue ul{padding-left:25px;margin:0;font-size:clamp(18px,2.5vw,27px)}.cue .question{color:#fff;font-size:18px}.answer{padding:16px;background:var(--mint);border-radius:9px;margin-top:12px}.answer p{margin:0}.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:10px 0}.grow{flex:1;min-width:150px}.pill{font-size:12px;border-radius:99px;background:var(--mint);padding:5px 9px}.empty{padding:24px;background:var(--card);border:1px dashed var(--line);border-radius:9px;color:var(--soft)}.outline{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}.outline a{font-size:12px;text-decoration:none;background:#eef2e8;border-radius:6px;padding:6px 9px}.outline a:hover{text-decoration:underline}dialog{max-width:min(900px,calc(100vw - 22px));width:100%;max-height:90dvh;padding:0;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 18px 60px #0c27264d}dialog::backdrop{background:#0f2a258f}.dialog-frame{max-height:90dvh;display:flex;flex-direction:column}.dialog-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 16px;background:var(--card);border-bottom:1px solid var(--line);flex:none;z-index:3}.dialog-head h2{font-family:inherit;font-size:17px;margin:0}.dialog-body{padding:16px 20px;overflow:auto;overscroll-behavior:contain;min-height:0}.dialog-body p{overflow-wrap:anywhere}.dialog-body .reading{padding:0}.dialog-body .reading section:first-child{border-top:0}.toast{position:fixed;z-index:5;bottom:14px;left:50%;transform:translateX(-50%);max-width:92%;padding:10px 16px;background:var(--ink);color:white;border-radius:9px;box-shadow:0 4px 20px #0003}.status{font-size:13px;color:var(--soft);min-height:1.5em}.error{color:#a33622}.success{color:var(--green)}.small-edit{background:var(--mint);padding:8px;border-radius:8px;margin-bottom:12px}.section-edit{border:1px solid var(--line);padding:12px;border-radius:9px;margin:10px 0}.section-edit summary{cursor:pointer;font-weight:bold;padding:3px}.legacy{margin:12px 0}.links{font-size:12px;margin-top:15px}.links li{margin:.35em 0}footer{max-width:1356px;margin:auto;color:var(--soft);padding:16px 18px 26px;font-size:12px}[hidden]{display:none!important}@media(max-width:810px){header.top{align-items:flex-start;flex-direction:column;padding:18px 15px}header.top h1{font-size:25px}.layout{grid-template-columns:1fr;gap:14px;margin:14px auto;padding:0 12px}aside{position:static;max-height:none;padding:13px}aside .field{margin:6px 0}.doc-head{padding:16px}.doc-head h2{font-size:25px}.navtabs{gap:5px}.navtabs button{padding:8px 9px;font-size:12px}.dialog-body{padding:12px 15px}.dialog-head{padding:9px 12px}.dialog-head h2{font-size:15px}.reading p{font-size:16px}.tools .btn{font-size:12px}.cue .btn{white-space:normal}}
 </style></head><body>
-<header class="top"><div><small>EXPERT PRACTICE LIBRARY</small><h1>专家话术磨练看板</h1><p>找资料、读全文、提炼表达、脱稿练习</p></div><div class="tools"><button class="btn" id="manage">编辑当前资料</button><button class="btn" id="addDoc">新增资料</button><button class="btn" id="syncOpen">同步学习记录</button></div></header>
+<header class="top"><div><small>EXPERT PRACTICE LIBRARY</small><h1>专家话术磨练看板</h1><p>找资料、读全文、提炼表达、脱稿练习</p></div><div class="tools"><button class="btn" id="manage">编辑当前资料</button><button class="btn" id="addDoc">新增资料</button></div></header>
 <div class="layout"><aside aria-label="资料库分类"><h2>资料库</h2><label class="field">搜索资料<input id="librarySearch" type="search" placeholder="标题、分类或正文关键词"></label><label class="field">一级分类<select id="level1"></select></label><label class="field">二级分类<select id="level2"></select></label><div id="docList" class="doc-list"></div><p class="status" id="libraryStatus" role="status"></p></aside><main><div class="doc-head" id="docHead"></div><nav class="navtabs" aria-label="学习模式"><button class="btn" data-view="read">完整话术</button><button class="btn" data-view="cards">话术卡</button><button class="btn" data-view="practice">提词与自测</button><button class="btn" data-view="marks">我的高亮 <span id="markCount"></span></button></nav><div id="view"></div></main></div>
-<footer><p id="cloudStatus" role="status"></p>资料库发布后手机和电脑均可查看。个人标记、改写和自测进度先保存到当前浏览器，可在「同步学习记录」中加密同步。</footer>
+<footer><p id="cloudStatus" role="status"></p>发布后的资料会在已打开看板的设备上自动更新。个人高亮和练习进度保存在当前浏览器。</footer>
 <dialog id="reader" aria-labelledby="readerTitle"><div class="dialog-frame"><div class="dialog-head"><h2 id="readerTitle">查看完整话术</h2><button class="btn" data-close="reader" aria-label="关闭完整话术">关闭全文 ✕</button></div><div class="dialog-body" id="readerScroll"></div></div></dialog>
-<dialog id="syncDialog" aria-labelledby="syncTitle">
-  <div class="dialog-frame">
-    <div class="dialog-head"><h2 id="syncTitle">同步学习记录</h2><button class="btn" id="syncClose" data-close="syncDialog">关闭 ✕</button></div>
-    <div class="dialog-body">
-      <p>在手机和电脑使用同一个 Google 账号和加密口令，就能合并高亮、话术卡改写和自测进度。</p>
-      <p class="muted">只上传加密后的学习记录。请记住你的加密口令。</p>
-      <div class="row"><button class="btn" id="syncLogin" disabled>使用 Google 登录</button><p class="status" id="syncAccount" role="status"></p></div>
-      <label class="field">加密口令<input id="syncSecret" type="password" autocomplete="off" minlength="16" placeholder="至少 16 个字符，两端相同"></label>
-      <div class="row"><button class="btn primary" id="syncRun" disabled>合并并同步</button><button class="btn" id="backup">导出本机备份</button><button class="btn" id="restore">导入备份</button></div>
-      <p class="status" role="status" id="syncStatus"></p><input type="file" id="backupFile" accept=".json,application/json" hidden>
-    </div>
-  </div>
-</dialog>
 <dialog id="editDialog" aria-labelledby="editHeading">
   <div class="dialog-frame">
     <div class="dialog-head"><h2 id="editHeading">资料管理</h2><button class="btn" id="editClose" data-close="editDialog">关闭 ✕</button></div>
     <div class="dialog-body">
-      <p class="notice">保存并发布后，所有访问者刷新即可查看最新版。个人高亮和练习记录独立保存。</p>
+      <p class="notice">保存并发布后，其他打开看板的设备会自动显示最新版。</p>
       <fieldset id="editFields" style="margin:0;padding:0;border:0;min-width:0">
         <label class="field">资料标题<input id="editTitle" maxlength="150"></label>
         <div class="row"><label class="field grow">一级分类<input id="editLevel1" list="level1List" maxlength="60"></label><label class="field grow">二级分类<input id="editLevel2" list="level2List" maxlength="60"></label></div>
@@ -43,12 +30,12 @@
 <script>'use strict';
 const $=id=>document.getElementById(id);
 const stateKey='expert_talk_study_v3';
-const enc=new TextEncoder(), dec=new TextDecoder();
+const enc=new TextEncoder();
 const legacyCatalog=JSON.parse($('initial-library').textContent);
 let catalog=legacyCatalog, selected=catalog.docs[0].id, view='read', slide=0, questionOpen=false, docQuery='', editorBase=null, timer=null, toastTimer;
 let baseCatalog=legacyCatalog, cloudTalks=new Map(), editorId, editorRevision;
 const firebaseConfig=JSON.parse($('firebase-config').textContent);
-let cloud, account, canPublish=false, accountBusy=true, publishing=false, syncing=false;
+let cloud, account, canPublish=false, accountBusy=true, publishing=false;
 const load=(key,fallback)=>{try{return JSON.parse(localStorage.getItem(key))??fallback;}catch{return fallback;}};
 const idRe=/^[a-z0-9][a-z0-9-]{0,99}$/;
 const clean=s=>String(s??'').trim();
@@ -65,9 +52,7 @@ function normalize(input){const out={};if(!input||typeof input!=='object'||Array
 let records=normalize(load(stateKey,{}));
 const device=crypto.randomUUID?.()??('dev-'+Math.random().toString(36).slice(2));
 let seq=0, lastStamp=0;
-const cmp=(a,b)=>a.t-b.t||a.n-b.n||a.d.localeCompare(b.d);
-function merge(a,b){const r={...a};for(const [k,v] of Object.entries(b))if(!r[k]||cmp(v,r[k])>0)r[k]=v;return r;}
-function save(){try{localStorage.setItem(stateKey,JSON.stringify(records));return true;}catch{toast('浏览器无法保存，请先导出本机备份。');return false;}}
+function save(){try{localStorage.setItem(stateKey,JSON.stringify(records));}catch{toast('当前浏览器无法保存这条学习记录。');}}
 function setRecord(key,value){lastStamp=Math.max(Date.now(),lastStamp,records[key]?.t||0);seq=Math.max(seq,records[key]?.n||0)+1;records[key]={t:lastStamp,n:seq,d:device,v:value};save();}
 const cardKey=(d,s)=>'c|'+d.id+'|'+s.id, practiceKey=(d,s)=>'p|'+d.id+'|'+s.id;
 const markPrefix=d=>'m|'+d.id+'|';
@@ -83,11 +68,12 @@ function snippets(s,q){const n=document.createDocumentFragment();if(!q){n.append
 function updateMarks(key){document.querySelectorAll('[data-mark]').forEach(n=>{if(n.dataset.mark===key){const on=typeof records[key]?.v==='string';n.classList.toggle('saved',on);n.setAttribute('aria-pressed',String(on));n.title=on?'取消此句高亮':'高亮此句';}});recount();}
 function renderText(target,d,prefix,filter=''){const reading=elem('div','reading');let count=0;for(const s of d.sections){if(filter&&!`${s.title}\n${s.body}`.toLowerCase().includes(filter.toLowerCase()))continue;count++;const section=elem('section');section.id=prefix+s.id;section.append(elem('h3',null,s.title));const duplicates=new Map();for(const para of s.body.split(/\n\s*\n/)){const p=elem('p');for(const quote of sentences(para)){const base=hash(quote);const index=duplicates.get(base)||0;duplicates.set(base,index+1);const key=markPrefix(d)+s.id+'|'+base+'-'+index;const n=elem('span','sentence');n.dataset.mark=key;n.tabIndex=0;n.setAttribute('role','button');const on=typeof records[key]?.v==='string';n.setAttribute('aria-pressed',String(on));n.classList.toggle('saved',on);n.title=on?'取消此句高亮':'高亮此句';n.append(snippets(quote,filter));const toggle=()=>{if(window.getSelection()?.toString())return;setRecord(key,typeof records[key]?.v==='string'?null:quote);updateMarks(key);};n.onclick=toggle;n.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}};p.append(n);}section.append(p);}reading.append(section);}target.replaceChildren(reading);if(!count)target.append(elem('p','empty','没有找到匹配的章节。'));return count;}
 function textDownload(){const d=doc();download(d.title+'-完整话术.txt',d.title+'\n\n'+d.sections.map(s=>s.title+'\n\n'+s.body).join('\n\n'),'text/plain;charset=utf-8');}
-function readModal(){const d=doc();$('readerTitle').textContent='完整话术 · '+d.title;const bar=elem('div','row');bar.append(btn('下载全文',textDownload));const body=elem('div');renderText(body,d,'modal-');$('readerScroll').replaceChildren(bar,body);$('reader').showModal();$('readerScroll').scrollTop=0;}
+function renderReader(){const d=doc();$('readerTitle').textContent='完整话术 · '+d.title;const bar=elem('div','row');bar.append(btn('下载全文',textDownload));const body=elem('div');renderText(body,d,'modal-');$('readerScroll').replaceChildren(bar,body);}
+function readModal(){renderReader();$('reader').showModal();$('readerScroll').scrollTop=0;}
 function sources(target,d){if(!Array.isArray(d.sources)||!d.sources.length)return;const details=elem('details','links');details.append(elem('summary',null,'术语与口径参考'));const list=elem('ul');for(const r of d.sources){if(typeof r?.url!=='string'||!r.url.startsWith('https://'))continue;const link=elem('a',null,r.title);link.href=r.url;link.target='_blank';link.rel='noopener noreferrer';const li=elem('li');li.append(link);list.append(li);}details.append(list);target.append(details);}
 function showRead(root,d){root.append(elem('p','notice','点击任意一句标黄，再点同一句取消。阅读弹窗滚动时，顶部的关闭按钮始终可见。'));const bar=elem('div','row');const search=elem('input','search grow');search.type='search';search.placeholder='在这份话术内搜索';search.setAttribute('aria-label','搜索当前话术');search.value=docQuery;bar.append(search,btn('查看完整话术',readModal,'primary'),btn('下载全文',textDownload));root.append(bar);const outline=elem('div','outline');d.sections.forEach((s,i)=>{const a=elem('a',null,`${i+1}. ${s.title}`);a.href='#main-'+s.id;a.onclick=e=>{e.preventDefault();if(docQuery){docQuery='';search.value='';renderText(body,d,'main-');}document.getElementById('main-'+s.id)?.scrollIntoView({block:'start',behavior:'smooth'});};outline.append(a);});root.append(outline);const body=elem('div');root.append(body);renderText(body,d,'main-',docQuery);search.oninput=()=>{docQuery=search.value.trim();renderText(body,d,'main-',docQuery);};sources(root,d);}
 function labeledText(host,label,text){host.append(elem('p','kicker',label),elem('p',null,text));}
-function showCards(root,d){root.append(elem('p','notice',d.verbatim?'每张卡直接摘录对应章节的原句。个人改写可另存。':'每张卡对应全文一章。先理解「底层原理」，再把「演练话术」说成自己的表达。个人改写可随学习记录同步。'));for(const s of d.sections){const k=cardKey(d,s), c=records[k]?.v??s.card, box=elem('article','card');box.append(elem('h3',null,c.title||s.title));labeledText(box,d.verbatim?'原文要点':'底层原理',c.theory||'尚未整理');labeledText(box,d.verbatim?'原文话术':'演练话术',c.script||'尚未整理');box.append(btn('查看对应全文',()=>{view='read';docQuery='';render();document.getElementById('main-'+s.id)?.scrollIntoView({behavior:'smooth'});}), ' ', btn('改成我的说法',()=>{const panel=elem('div','small-edit');const title=field(panel,'卡片标题',c.title), theory=field(panel,'底层原理',c.theory,true), script=field(panel,'演练话术',c.script,true);panel.append(btn('保存个人改写',()=>{setRecord(k,{title:clean(title.value),theory:clean(theory.value),script:clean(script.value)});render();},'primary'),' ',btn('恢复资料库版本',()=>{setRecord(k,null);render();}));box.append(panel);}));root.append(box);}
+function showCards(root,d){root.append(elem('p','notice',d.verbatim?'每张卡直接摘录对应章节的原句。个人改写可另存。':'每张卡对应全文一章。先理解「底层原理」，再把「演练话术」说成自己的表达。个人改写保存在当前浏览器。'));for(const s of d.sections){const k=cardKey(d,s), c=records[k]?.v??s.card, box=elem('article','card');box.append(elem('h3',null,c.title||s.title));labeledText(box,d.verbatim?'原文要点':'底层原理',c.theory||'尚未整理');labeledText(box,d.verbatim?'原文话术':'演练话术',c.script||'尚未整理');box.append(btn('查看对应全文',()=>{view='read';docQuery='';render();document.getElementById('main-'+s.id)?.scrollIntoView({behavior:'smooth'});}), ' ', btn('改成我的说法',()=>{const panel=elem('div','small-edit');const title=field(panel,'卡片标题',c.title), theory=field(panel,'底层原理',c.theory,true), script=field(panel,'演练话术',c.script,true);panel.append(btn('保存个人改写',()=>{setRecord(k,{title:clean(title.value),theory:clean(theory.value),script:clean(script.value)});render();},'primary'),' ',btn('恢复资料库版本',()=>{setRecord(k,null);render();}));box.append(panel);}));root.append(box);}
  if(!d.verbatim&&d.id===legacyCatalog.docs[0].id&&Array.isArray(oldCards)&&oldCards.length){const details=elem('details','legacy');details.append(elem('summary',null,'旧版保留的本机话术卡'));for(const c of oldCards){const n=elem('article','card');n.append(elem('h3',null,c.title));labeledText(n,'底层原理',c.theory);labeledText(n,'演练话术',c.script);details.append(n);}root.append(details);}}
 function stopTimer(){clearInterval(timer);timer=null;}
 function practicePanel(root,d){const s=d.sections[Math.min(slide,d.sections.length-1)], state=records[practiceKey(d,s)]?.v;const mastered=d.sections.filter(s=>records[practiceKey(d,s)]?.v==='mastered').length;root.append(elem('p','notice',`已掌握 ${mastered} / ${d.sections.length} 章。先看关键词口述，再展开要点对照，自评后进入下一章。`));const nav=elem('div','row');const chooser=elem('select','search grow');chooser.setAttribute('aria-label','选择练习章节');d.sections.forEach((x,i)=>chooser.add(new Option(`${i+1}. ${x.title}`,i)));chooser.value=slide;const move=i=>{stopTimer();slide=Math.max(0,Math.min(d.sections.length-1,i));questionOpen=false;render();};chooser.onchange=()=>move(Number(chooser.value));const prev=btn('上一章',()=>move(slide-1)),next=btn('下一章',()=>move(slide+1));prev.disabled=!slide;next.disabled=slide===d.sections.length-1;nav.append(prev,chooser,next);root.append(nav);
@@ -105,20 +91,13 @@ function editorSection(s){const group=elem('details','section-edit');group.datas
 const blankSection=()=>({id:'s-'+crypto.randomUUID().slice(0,12),title:'',body:'',card:{title:'',theory:'',script:''},practice:{cues:[],question:'',answer:''}});
 function editOpen(create){editorBase=create?null:structuredClone(doc());editorId=editorBase?.id||'doc-'+crypto.randomUUID();editorRevision=cloudTalks.get(editorId)?.revision||0;populateDatalists();$('editHeading').textContent=create?'新增资料':'编辑当前资料';for(const [id,k] of [['editTitle','title'],['editLevel1','level1'],['editLevel2','level2'],['editDescription','description']])$(id).value=editorBase?.[k]||'';$('editSections').replaceChildren();(editorBase?.sections||[blankSection()]).forEach(editorSection);if(create)$('editSections').firstChild.open=true;status('editStatus','');$('editDialog').showModal();}
 function draft(){const sections=[...$('editSections').querySelectorAll('[data-section]')].map(group=>{const get=k=>clean(group.querySelector(`[data-field="${k}"]`).value);const title=get('title');return {id:group.dataset.section,title,body:get('body'),card:{title:get('cardTitle')||title,theory:get('theory'),script:get('script')},practice:{cues:get('cues').split('\n').map(clean).filter(Boolean),question:get('question'),answer:get('answer')}};});return {id:editorId,title:clean($('editTitle').value),level1:clean($('editLevel1').value),level2:clean($('editLevel2').value),description:clean($('editDescription').value),sections,sources:editorBase?.sources||[],...(editorBase?.verbatim?{verbatim:true}:{})};}
-function bytesTo64(bytes){let bin='';for(let i=0;i<bytes.length;i+=8192)bin+=String.fromCharCode(...bytes.subarray(i,i+8192));return btoa(bin);}
-const from64=s=>Uint8Array.from(atob(s),x=>x.charCodeAt(0));
 function accountControls(){
-  for(const id of ['editLogin','syncLogin']){
-    $(id).textContent=account?'退出 Google 登录':'使用 Google 登录';
-    $(id).disabled=!cloud||accountBusy||publishing||syncing;
-    $(id).hidden=canPublish&&id==='editLogin';
-  }
-  const message=accountBusy?'正在检查登录状态…':!cloud?'云端暂不可用。':canPublish?'已登录，可使用云端功能。':account?'这个账号没有权限，请切换到看板所有者的 Google 账号。':'请使用看板所有者的 Google 账号登录。';
-  for(const id of ['editAccount','syncAccount'])status(id,message,account&&!canPublish&&!accountBusy?'error':'');
-  $('publish').disabled=!canPublish||publishing||syncing||accountBusy;
-  $('syncRun').disabled=!canPublish||publishing||syncing||accountBusy;
+  $('editLogin').textContent=account?'退出 Google 登录':'使用 Google 登录';
+  $('editLogin').disabled=!cloud||accountBusy||publishing;
+  const message=accountBusy?'正在检查登录状态…':!cloud?'云端暂不可用。':canPublish?'已登录，可以发布。':account?'这个账号没有发布权限，请切换到看板所有者的 Google 账号。':'请使用看板所有者的 Google 账号登录。';
+  status('editAccount',message,account&&!canPublish&&!accountBusy?'error':'');
+  $('publish').disabled=!canPublish||publishing||accountBusy;
   $('editClose').disabled=publishing;
-  $('syncClose').disabled=syncing;
   $('editFields').disabled=publishing;
 }
 function cloudError(error){
@@ -132,35 +111,59 @@ function cloudError(error){
     default: return error.code?'云端操作暂未完成，请稍后重试。':error.message;
   }
 }
-async function googleLogin(statusId){
-  accountBusy=true;accountControls();status(statusId,'');
+async function googleLogin(){
+  accountBusy=true;accountControls();status('editStatus','');
   try{
     if(account)await cloud.authApi.signOut(cloud.auth);
     else await cloud.authApi.signInWithPopup(cloud.auth,new cloud.authApi.GoogleAuthProvider());
-  }catch(error){accountBusy=false;accountControls();status(statusId,cloudError(error),'error');}
+  }catch(error){accountBusy=false;accountControls();status('editStatus',cloudError(error),'error');}
 }
 function applyCatalog(){
+  const previous=doc();
   const docs=new Map(baseCatalog.docs.map(d=>[d.id,d]));
   for(const [id,{data}] of cloudTalks)docs.set(id,data);
   catalog={version:1,docs:[...docs.values()]};
   boot();
+  if($('reader').open&&doc()!==previous){
+    const scroll=$('readerScroll'),top=scroll.scrollTop;
+    renderReader();
+    scroll.scrollTop=top;
+  }
 }
-async function loadPublishedTalks(){
-  const {db,dbApi}=cloud;
-  const snapshot=await dbApi.getDocs(dbApi.collection(db,'talks'));
+function receivePublishedTalks(snapshot){
+  if(snapshot.metadata.fromCache){
+    status('cloudStatus','正在连接共享资料，当前显示已加载的版本。');
+    return;
+  }
+  const next=new Map();
   for(const item of snapshot.docs){
     const {content,revision}=item.data();
+    const previous=cloudTalks.get(item.id);
+    if(item.metadata.hasPendingWrites||previous?.revision>=revision){
+      if(previous)next.set(item.id,previous);
+      continue;
+    }
     const data=JSON.parse(content);
     validCatalog({version:1,docs:[data]});
     if(data.id!==item.id||!Number.isSafeInteger(revision)||revision<1)throw Error('发布资料格式有误。');
-    if((cloudTalks.get(data.id)?.revision||0)<revision)cloudTalks.set(data.id,{data,revision});
+    next.set(data.id,{data,revision});
   }
-  applyCatalog();
+  const changed=next.size!==cloudTalks.size||[...next].some(([id,talk])=>cloudTalks.get(id)!==talk);
+  cloudTalks=next;
+  status('cloudStatus','');
+  if(changed)applyCatalog();
+}
+function watchPublishedTalks(){
+  const {db,dbApi}=cloud;
+  const unavailable=()=>status('cloudStatus','暂时无法读取共享更新，当前显示已加载的资料。','error');
+  dbApi.onSnapshot(dbApi.collection(db,'talks'),{includeMetadataChanges:true},snapshot=>{
+    try{receivePublishedTalks(snapshot);}catch{unavailable();}
+  },unavailable);
 }
 async function initCloud(){
   if(!firebaseConfig){accountBusy=false;accountControls();return;}
   try{
-    const sdk=await import('./firebase-sdk.js');
+    const sdk=await import('./firebase-sdk.js?v=live-1');
     const app=sdk.initializeApp(firebaseConfig);
     const authApi=sdk,dbApi=sdk;
     cloud={authApi,dbApi,auth:authApi.getAuth(app),db:dbApi.getFirestore(app)};
@@ -168,15 +171,15 @@ async function initCloud(){
       account=user;canPublish=false;accountBusy=!!user;accountControls();
       if(!user)return;
       let allowed=false;
-      try{await dbApi.getDoc(dbApi.doc(cloud.db,'permissions','publish'));allowed=true;}catch(error){
+      try{await dbApi.getDocFromServer(dbApi.doc(cloud.db,'permissions','publish'));allowed=true;}catch(error){
         if(error.code!=='permission-denied'&&account===user){
-          for(const id of ['editStatus','syncStatus'])status(id,cloudError(error),'error');
+          status('editStatus',cloudError(error),'error');
         }
       }
       if(account!==user)return;
       canPublish=allowed;accountBusy=false;accountControls();
     });
-    await loadPublishedTalks();
+    watchPublishedTalks();
   }catch{
     if(!cloud){accountBusy=false;accountControls();}
     status('cloudStatus','暂时无法读取云端更新，当前显示已加载的资料。','error');
@@ -185,7 +188,7 @@ async function initCloud(){
 async function publish(){
   if(!canPublish||publishing)return;
   const data=draft(),content=JSON.stringify(data),expectedRevision=editorRevision;
-  const conflict='这份资料已在另一台设备更新。请先复制你的改动，再刷新并重新编辑。';
+  const conflict='这份资料已在另一台设备更新。请先复制你的改动，再关闭并重新打开编辑窗口。';
   try{
     validCatalog({version:1,docs:[data]});
     if(enc.encode(content).length>900000)throw Error('这份资料太长，请拆成多份后发布。');
@@ -202,51 +205,18 @@ async function publish(){
       transaction.set(ref,{content,revision});
       return revision;
     });
-    cloudTalks.set(data.id,{data,revision});
+    if((cloudTalks.get(data.id)?.revision||0)<revision)cloudTalks.set(data.id,{data,revision});
     editorBase=data;editorRevision=revision;
     applyCatalog();selectDoc(data.id);
-    status('editStatus','已保存并发布。手机和电脑刷新后即可看到。','success');
+    status('editStatus','已保存并发布。其他打开看板的设备会自动更新。','success');
   }catch(error){status('editStatus',cloudError(error),'error');}
   finally{publishing=false;accountControls();}
 }
-const random=n=>crypto.getRandomValues(new Uint8Array(n));
-async function derive(secret,salt){const material=await crypto.subtle.importKey('raw',enc.encode(secret),'PBKDF2',false,['deriveKey']);return crypto.subtle.deriveKey({name:'PBKDF2',hash:'SHA-256',salt,iterations:600000},material,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);}
-const context=enc.encode('expert-talk-study:v1:Jasminerrrrr/english-board:codex/expert-study-sync');
-async function seal(data,secret){const salt=random(16),iv=random(12);const key=await derive(secret,salt);const ciphertext=await crypto.subtle.encrypt({name:'AES-GCM',iv,additionalData:context},key,enc.encode(JSON.stringify({version:1,records:data})));return {format:'expert-talk-aes-gcm-v1',salt:bytesTo64(salt),iv:bytesTo64(iv),ciphertext:bytesTo64(new Uint8Array(ciphertext))};}
-async function unseal(envelope,secret){if(envelope?.format!=='expert-talk-aes-gcm-v1')throw Error('云端文件格式不匹配。');try{const salt=from64(envelope.salt),iv=from64(envelope.iv);if(salt.length!==16||iv.length!==12)throw Error();const key=await derive(secret,salt);const plaintext=await crypto.subtle.decrypt({name:'AES-GCM',iv,additionalData:context},key,from64(envelope.ciphertext));const data=JSON.parse(dec.decode(plaintext));if(data.version!==1||!data.records)throw Error();return normalize(data.records);}catch{throw Error('无法解密云端记录：请使用首次同步时的同一个口令。没有覆盖任何记录。');}}
-async function sync(){
-  if(!canPublish||syncing)return;
-  const secret=$('syncSecret').value;
-  if(secret.length<16){status('syncStatus','请输入至少 16 个字符的加密口令。','error');return;}
-  syncing=true;accountControls();status('syncStatus','正在读取云端记录并合并…');
-  try{
-    const {db,dbApi}=cloud,ref=dbApi.doc(db,'study',account.uid);
-    const snapshot=await dbApi.runTransaction(db,async transaction=>{
-      const remote=(await transaction.get(ref)).data();
-      const saved=remote?await unseal(JSON.parse(remote.envelope),secret):{};
-      const merged=merge(merge(normalize(load(stateKey,{})),records),saved);
-      if(!remote||JSON.stringify(Object.entries(merged).sort())!==JSON.stringify(Object.entries(saved).sort())){
-        const envelope=JSON.stringify(await seal(merged,secret));
-        if(enc.encode(envelope).length>900000)throw Error('学习记录过大，请先导出本机备份。');
-        transaction.set(ref,{envelope});
-      }
-      return merged;
-    });
-    records=merge(merge(normalize(load(stateKey,{})),records),snapshot);
-    save();$('syncSecret').value='';render();
-    status('syncStatus','合并完成。另一台设备登录同一 Google 账号，用同一口令同步即可。','success');
-  }catch(error){status('syncStatus',cloudError(error),'error');}
-  finally{syncing=false;accountControls();}
-}
 function download(name,text,type){const u=URL.createObjectURL(new Blob([text],{type}));const a=elem('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);}
-$('backup').onclick=()=>download('专家话术学习记录-本机备份.json',JSON.stringify({version:1,records},null,2),'application/json');$('restore').onclick=()=>$('backupFile').click();$('backupFile').onchange=async e=>{try{const file=e.target.files?.[0];if(!file)return;const data=JSON.parse(await file.text());if(data.version!==1||!data.records)throw Error();records=merge(records,normalize(data.records));save();render();status('syncStatus','备份已合并到本机。','success');}catch{status('syncStatus','请选择这个版本导出的学习记录备份。','error');}finally{e.target.value='';}};
 document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>$(b.dataset.close).close());
-$('syncDialog').addEventListener('close',()=>{$('syncSecret').value='';});
-$('syncDialog').addEventListener('cancel',event=>{if(syncing)event.preventDefault();});
 $('editDialog').addEventListener('cancel',event=>{if(publishing)event.preventDefault();});
 $('manage').onclick=()=>editOpen(false);$('addDoc').onclick=()=>editOpen(true);$('newSection').onclick=()=>editorSection(blankSection()).open=true;$('publish').onclick=publish;
-$('syncOpen').onclick=()=>{status('syncStatus','');$('syncDialog').showModal();};$('syncRun').onclick=sync;
-$('editLogin').onclick=()=>googleLogin('editStatus');$('syncLogin').onclick=()=>googleLogin('syncStatus');
+$('editLogin').onclick=googleLogin;
 $('librarySearch').oninput=refreshLibrary;$('level1').onchange=()=>{$('level2').value='';refreshLibrary();};$('level2').onchange=refreshLibrary;document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{stopTimer();view=b.dataset.view;render();});
 function boot(){const requested=location.hash.slice(1);if(catalog.docs.some(d=>d.id===requested))selected=requested;refreshLibrary();render();}
 boot();accountControls();initCloud();
