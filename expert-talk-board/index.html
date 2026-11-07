@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>专家话术磨练看板 - 分红险与新港对比解析</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .highlighted { background-color: #fef3c7 !important; border-left: 4px solid #f59e0b !important; }
+        .dark-mode { background-color: #0f172a; color: #f8fafc; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
+
+    <!-- 顶部导航 -->
+    <header class="bg-indigo-600 text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+            <h1 class="text-lg md:text-xl font-bold flex items-center gap-2">
+                🎯 专家话术磨练看板 <span class="text-xs bg-indigo-500 px-2 py-0.5 rounded">分红险专场</span>
+            </h1>
+            <div class="flex gap-2">
+                <button onclick="filterHighlighted()" class="bg-indigo-700 hover:bg-indigo-800 text-xs px-3 py-1.5 rounded transition">⭐ 仅看高亮话术</button>
+                <button onclick="resetData()" class="bg-slate-700 hover:bg-slate-800 text-xs px-3 py-1.5 rounded transition">🔄 恢复默认</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主体区域 -->
+    <main class="max-w-7xl mx-auto px-4 py-6 flex-1 w-full grid grid-cols-1 md:grid-cols-4 gap-6">
+        
+        <!-- 左侧快速导航 -->
+        <aside class="md:col-span-1 hidden md:block">
+            <div class="bg-white rounded-xl shadow-sm p-4 sticky top-20 border border-slate-100">
+                <h3 class="font-semibold text-sm text-slate-500 mb-3 uppercase tracking-wider">模块导航</h3>
+                <nav class="space-y-1.5 text-sm">
+                    <a href="#mod-1" class="block px-3 py-2 rounded-lg hover:bg-slate-100 text-slate-700 font-medium">1. 拒绝纯套路，靠专业吃饭</a>
+                    <a href="#mod-2" class="block px-3 py-2 rounded-lg hover:bg-slate-100 text-slate-700 font-medium">2. 什么是分红险（底层基金）</a>
+                    <a href="#mod-3" class="block px-3 py-2 rounded-lg hover:bg-slate-100 text-slate-700 font-medium">3. 波动平滑机制与历史回测</a>
+                    <a href="#mod-4" class="block px-3 py-2 rounded-lg hover:bg-slate-100 text-slate-700 font-medium">4. 红利拆解：复归 vs 中期</a>
+                    <a href="#mod-5" class="block px-3 py-2 rounded-lg hover:bg-slate-100 text-slate-700 font-medium">5. 新加坡 vs 香港保险深度对比</a>
+                    <a href="#mod-6" class="block px-3 py-2 rounded-lg hover:bg-slate-100 text-slate-700 font-medium">6. 销售理念与三大成交切入点</a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- 右侧卡片内容区 -->
+        <section class="md:col-span-3 space-y-6" id="card-container">
+            <!-- 动态生成的内容由 JS 渲染 -->
+        </section>
+    </main>
+
+    <!-- 底部状态 -->
+    <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-400">
+        专家话术磨练看板 · 随时随地多端演练
+    </footer>
+
+    <script>
+        // 原始结构化话术数据
+        const initialData = [
+            {
+                id: "mod-1",
+                title: "1. 核心定位：拒绝单纯背话术，靠专业专业吃饭",
+                highlight: false,
+                theory: "现在客户获取信息渠道极多，单纯靠推销技巧和销售话术已经很难让客户买单。保险公司产品设计精细，精算师工作看似神奇，但顾问也需要具备‘半个精算师’的知识储备。专业回答客户的底层专业问题，是体现价值、建立信任的加分项，而不是去死记硬背一套死板的话术。",
+                script: "“王姐，市面上很多销售喜欢给您直接背产品话术，但我更希望带您了解产品的底层逻辑。就像学数学一样，您先懂了最基础的1+1=2，后面不管遇到什么复杂的资产配置问题，您都能游刃有余地回答，而不是被客户一个专业问题问懵。”"
+            },
+            {
+                id: "mod-2",
+                title: "2. 产品本质：什么是分红险？",
+                highlight: false,
+                theory: "分红险本质上是一个互助契约，底层匹配的是一个大型的‘多元资产配置基金’（Participating Fund）。它将人寿保障与长期储蓄功能结合，客户不仅是保单持有人，更是分红基金的‘准股东’，可享受可分配盈余。相较于IUL（债权+期权），分红险底层的资产配置（股票、债券、房地产、私募股权）更加分散和多元。",
+                script: "“您可以把分红险理解为一个大型的多元资产专业基金。我们把保费投进去，和保险公司绑定成‘准股东’。它不仅有寿险保障，还能帮我们配置全球的股票、债券和不动产，比我们自己单买基金要省心、稳健得多。”"
+            },
+            {
+                id: "mod-3",
+                title: "3. 核心机制：波动平滑机制（平滑储备金）",
+                highlight: false,
+                theory: "分红险区别于单独投资基金的最大特点在于‘平滑机制’。市场大好时（如2024年回报率高），留存部分收益到平滑储备金；市场大跌时（如2022年），释放储备金补贴红利，平滑客户的年度收益曲线。实测证明，在疫情等极端大跌年份，新加坡分红险凭借稳健的债权底仓和储备金，分红实现率依然能稳定保持在100%。",
+                script: "“很多客户担心市场波动，但分红险有‘平滑机制’。好年景时，保险公司会把多赚的钱存进储备金；遇到像疫情或市场大跌的年份，它会拿出来补贴给您。所以过去几年，新加坡主流保险公司的分红实现率基本都能稳稳达到100%。”"
+            },
+            {
+                id: "mod-4",
+                title: "4. 红利拆解：复归红利 vs 中期红利",
+                highlight: false,
+                theory: "英式分红包含两大红利：① 复归红利（Reversionary Bonus）：年度宣告确定后不可撤销，属于确定性的资产阶梯式增长，提供长期的安全感；② 中期红利（Terminal Bonus）：在退保、身故、满期时一次性给付，带有浮动性，随资产份额和市场状况调整，鼓励客户长期持有，避免在经济低谷期盲目退保承受损失。",
+                script: "“我们的分红分为两部分：第一部分是‘复归红利’，每年发给您的就像阶梯一样，白纸黑字锁定，绝不收回；第二部分是‘中期红利’，相当于蓄水池里的长期超额收益，只要您不短视、不急着在市场不好时退保，陪着保单长期走下去，最后全都会实打实落到您的口袋里。”"
+            },
+            {
+                id: "mod-5",
+                title: "5. 深度解析：新加坡保险 vs 香港保险对比",
+                highlight: false,
+                theory: "① 底层资产比例：香港保险60%-70%投向权益类（股票）；新加坡保险60%-70%投向债券。② 为什么香港敢投高权益？因为香港保单的‘保证现金价值’设得很低（例如交10万只保证1万），保险公司资本储备压力小，将股市波动风险转移给了客户。新加坡保单的‘保证现金价值’极高（例如交10万要保证6万），监管要求保险公司必须储备大量真金白银的资本金，因此底仓必须以高质量主权债和3B+以上债券为主，追求长期100%稳健兑付。",
+                script: "“客户经常问：为什么香港计划书数字看起来比新加坡高？秘诀在于‘保证’。香港的保证现金价值很低，相当于把股票亏损风险转给了客户，所以它敢多买股票。而新加坡给您的保证额度非常高，必须用扎扎实实的主权债和高评级债券去兜底。如果您追求高收益去搏股票波动，选香港；如果您更看重所见即所得、稳稳的100%实现率，新加坡明显更踏实。”"
+            },
+            {
+                id: "mod-6",
+                title: "6. 销售理念：三大刚需切入点与资产配置",
+                highlight: false,
+                theory: "① 平衡波动性：高低波动资产需要科学配比。刚性需求（孩子学费、日常开销、养老金）需要低波动资产来托底，避免遭遇周期打击时出现生活危机。② 强制储蓄与长期锁定：利用富归红利的不可撤销性，避免客户频繁折腾资产。③ 利益一致性：新加坡监管规定保单持有人分配>=90%，股东<=10%，把公司和客户深度捆绑在一条船上，促使保险公司用心把蛋糕做大。",
+                script: "“我们不是在向您推销一款保险，而是在帮您的家庭资产做‘减震器’。孩子的教育金、您的养老金属于刚性支出，必须要有低波动、能锁定、长情陪伴的产品来托底。新加坡分红险让股东和客户共享90%的收益，大家在同一条船上，这才是穿越经济周期的最省心选择。”"
+            }
+        ];
+
+        // 本地存储加载与渲染
+        function loadContent() {
+            const saved = localStorage.getItem('expert_board_data');
+            const data = saved ? JSON.parse(saved) : initialData;
+            const container = document.getElementById('card-container');
+            container.innerHTML = '';
+
+            data.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = `bg-white rounded-xl shadow-sm border p-6 transition-all ${item.highlight ? 'highlighted border-amber-300 shadow-md' : 'border-slate-100'}`;
+                card.innerHTML = `
+                    <div class="flex justify-between items-start gap-4 mb-3">
+                        <h2 class="text-base md:text-lg font-bold text-slate-900">${item.title}</h2>
+                        <div class="flex items-center gap-2 shrink-0">
+                            <button onclick="toggleHighlight(${index})" class="text-xs px-2.5 py-1 rounded-full border transition ${item.highlight ? 'bg-amber-500 text-white border-amber-500' : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'}">
+                                ${item.highlight ? '⭐ 已高亮' : '☆ 标记重点'}
+                            </button>
+                        </div>
+                    </div>
+                    <div class="space-y-3 text-sm">
+                        <div class="bg-slate-50 p-3.5 rounded-lg border border-slate-100">
+                            <span class="text-xs font-bold text-indigo-600 uppercase tracking-wide block mb-1">💡 专家底层原理（自己听懂）</span>
+                            <div contenteditable="true" onblur="updateData(${index}, 'theory', this.innerText)" class="outline-none focus:bg-white focus:ring-1 focus:ring-indigo-300 rounded p-1 text-slate-700 leading-relaxed">${item.theory}</div>
+                        </div>
+                        <div class="bg-indigo-50/50 p-3.5 rounded-lg border border-indigo-100/50">
+                            <span class="text-xs font-bold text-emerald-600 uppercase tracking-wide block mb-1">🗣️ 对客黄金话术（演练口语）</span>
+                            <div contenteditable="true" onblur="updateData(${index}, 'script', this.innerText)" class="outline-none focus:bg-white focus:ring-1 focus:ring-emerald-300 rounded p-1 text-slate-800 italic leading-relaxed">${item.script}</div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // 切换高亮
+        function toggleHighlight(index) {
+            const saved = localStorage.getItem('expert_board_data');
+            let data = saved ? JSON.parse(saved) : initialData;
+            data[index].highlight = !data[index].highlight;
+            localStorage.setItem('expert_board_data', JSON.stringify(data));
+            loadContent();
+        }
+
+        // 实时更新文本并自动保存
+        function updateData(index, field, value) {
+            const saved = localStorage.getItem('expert_board_data');
+            let data = saved ? JSON.parse(saved) : initialData;
+            data[index][field] = value.trim();
+            localStorage.setItem('expert_board_data', JSON.stringify(data));
+        }
+
+        // 仅看高亮切换筛选
+        let showOnlyHighlighted = false;
+        function filterHighlighted() {
+            showOnlyHighlighted = !showOnlyHighlighted;
+            const saved = localStorage.getItem('expert_board_data');
+            let data = saved ? JSON.parse(saved) : initialData;
+            const container = document.getElementById('card-container');
+            container.innerHTML = '';
+
+            data.forEach((item, index) => {
+                if (showOnlyHighlighted && !item.highlight) return;
+                const card = document.createElement('div');
+                card.className = `bg-white rounded-xl shadow-sm border p-6 transition-all ${item.highlight ? 'highlighted border-amber-300 shadow-md' : 'border-slate-100'}`;
+                card.innerHTML = `
+                    <div class="flex justify-between items-start gap-4 mb-3">
+                        <h2 class="text-base md:text-lg font-bold text-slate-900">${item.title}</h2>
+                        <button onclick="toggleHighlight(${index})" class="text-xs px-2.5 py-1 rounded-full border transition ${item.highlight ? 'bg-amber-500 text-white border-amber-500' : 'bg-slate-50 text-slate-600 border-slate-200'}">
+                            ${item.highlight ? '⭐ 已高亮' : '☆ 标记重点'}
+                        </button>
+                    </div>
+                    <div class="space-y-3 text-sm">
+                        <div class="bg-slate-50 p-3.5 rounded-lg border border-slate-100">
+                            <span class="text-xs font-bold text-indigo-600 uppercase tracking-wide block mb-1">💡 专家底层原理</span>
+                            <div contenteditable="true" onblur="updateData(${index}, 'theory', this.innerText)" class="outline-none focus:ring-1 focus:ring-indigo-300 rounded p-1 text-slate-700 leading-relaxed">${item.theory}</div>
+                        </div>
+                        <div class="bg-indigo-50/50 p-3.5 rounded-lg border border-indigo-100/50">
+                            <span class="text-xs font-bold text-emerald-600 uppercase tracking-wide block mb-1">🗣️ 对客黄金话术</span>
+                            <div contenteditable="true" onblur="updateData(${index}, 'script', this.innerText)" class="outline-none focus:ring-1 focus:ring-emerald-300 rounded p-1 text-slate-800 italic leading-relaxed">${item.script}</div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // 恢复默认
+        function resetData() {
+            if(confirm("确定要恢复默认内容吗？您手动修改和高亮的内容将被重置。")) {
+                localStorage.removeItem('expert_board_data');
+                loadContent();
+            }
+        }
+
+        // 初始化加载
+        loadContent();
+    </script>
+</body>
+</html>
